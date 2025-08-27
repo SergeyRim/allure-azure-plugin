@@ -3,31 +3,38 @@
     <script src="../node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js"></script>
 
     <script type="text/javascript">
-        VSS.init({
-            usePlatformScripts: true
-        });
+    VSS.init({
+        usePlatformScripts: true
+    });
 
-        VSS.ready(function() {
-            var sharedConfig = VSS.getConfiguration();
-            var vsoContext = VSS.getWebContext();
-            if(sharedConfig) {
-                sharedConfig.onBuildChanged(function(build) {
-                    console.log(build);
-                    VSS.getService(VSS.ServiceIds.ExtensionData).then(function(dataService) {
-                        dataService.getValue('baseUrl', {scopeType: 'Default'}).then(function(baseUrl) {
-                            showReport(baseUrl, build.buildNumber);
-                            VSS.notifyLoadSucceeded();
-                        });
+    VSS.ready(function() {
+        var sharedConfig = VSS.getConfiguration();
+
+        if (sharedConfig) {
+            sharedConfig.onBuildChanged(function(build) {
+                console.log(build);
+
+                var buildNumber = build.buildNumber;
+                var definitionName = build.definition.name || "";
+
+                VSS.getService(VSS.ServiceIds.ExtensionData).then(function(dataService) {
+                    dataService.getValue('baseUrl', { scopeType: 'Default' }).then(function(baseUrl) {
+                        showReport(baseUrl, buildNumber, definitionName);
+                        VSS.notifyLoadSucceeded();
                     });
                 });
-            }
-        });
-
-        function showReport(baseUrl, buildNumber) {
-            var reportUrl = baseUrl.replace(/\$\(Build\.BuildNumber\)/ig, buildNumber);
-            var iframe = document.getElementById('allure-report-iframe');
-            iframe.src = reportUrl;
+            });
         }
+    });
+
+    function showReport(baseUrl, buildNumber, definitionName) {
+        var reportUrl = baseUrl
+            .replace(/\$\(Build\.BuildNumber\)/ig, buildNumber)
+            .replace(/\$\(Build\.DefinitionName\)/ig, definitionName);
+
+        var iframe = document.getElementById('allure-report-iframe');
+        iframe.src = reportUrl;
+    }
     </script>
 
     <style>

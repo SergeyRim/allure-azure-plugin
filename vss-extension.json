@@ -2,8 +2,8 @@
   "manifestVersion": 1,
   "id": "allure-test-reports",
   "name": "Allure Test Reports",
-  "version": "1.3",
-  "publisher": "ivang7",
+  "version": "1.6",
+  "publisher": "SergeyR",
   "public": true,
   "targets": [
     {
@@ -12,7 +12,6 @@
   ],
   "description": "Publish test results in Allure report format",
   "categories": [
-    "Test",
     "Azure Pipelines"
   ],
   "screenshots": [
@@ -80,10 +79,6 @@
       "addressable": true
     }
   ],
-  "repository": {
-    "type": "git",
-    "uri": "https://github.com/ivang7/allure-vsts/"
-  },
   "contributions": [
     {
       "id": "allure-generate",

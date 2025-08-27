@@ -1,5 +1,7 @@
 This extension allows you to generate and view Allure test reports right from the Visual Studio Team Services interface.
 
+**Important** This extension allows you to use $(Build.BuildNumber) and optionally $(Build.DefinitionName) to distinguish between Allure reports for different pipelines. In the original extension, only $(Build.BuildNumber) is allowed, so if, for example, two different pipelines generate and upload Allure reports in the same run, both report files will be mixed in one folder (i.e., 20250827.1). With the additional $(Build.DefinitionName) variable, we can set baseUrl to https://some-url/$(Build.DefinitionName)/$(Build.BuildNumber), so each pipeline will have its own Allure folder.
+
 **Please note** that due too some limitation in the current version of Team Services API the Allure Generate Build Step will only generate the Allure report and save it as a build artifact. To enable "Open Allure Report" option you will need to add additional build step to publish the report somewhere. For instance you can create a simple Azure Web App (or use github pages) and upload reports there using Build Task extension like [FTP Upload](https://marketplace.visualstudio.com/items?itemName=januskamphansen.ftpupload-task). You website should support HTTPS.
 
 **Please note** If you use Azure Website or IIS in general some file types used by Allure are not enabled by default. Please, add mimetypes as shown below to your web.config in order to enable support of .json and .woff file types.

@@ -3,24 +3,30 @@
 <head>
     <title>Allure Report</title>
     <script src="../node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js"></script>
-    <script type="text/javascript">
-        VSS.init({explicitNotifyLoaded: true, usePlatformScripts: true});
-        VSS.ready(function() {
-            var buildNumber = VSS.getConfiguration().buildNumber;
-            VSS.getService(VSS.ServiceIds.ExtensionData).then(function(dataService) {
-                dataService.getValue('baseUrl', {scopeType: 'Default'}).then(function(baseUrl) {
-                    showReport(baseUrl, buildNumber);
-                    VSS.notifyLoadSucceeded();
-                });
+   <script type="text/javascript">
+    VSS.init({explicitNotifyLoaded: true, usePlatformScripts: true});
+    VSS.ready(function() {
+        var config = VSS.getConfiguration();
+        var buildNumber = config.buildNumber;
+        var definitionName = config.definition.name; // pipeline name
+
+        VSS.getService(VSS.ServiceIds.ExtensionData).then(function(dataService) {
+            dataService.getValue('baseUrl', {scopeType: 'Default'}).then(function(baseUrl) {
+                showReport(baseUrl, buildNumber, definitionName);
+                VSS.notifyLoadSucceeded();
             });
         });
+    });
 
-        function showReport(baseUrl, buildNumber) {
-            var reportUrl = baseUrl.replace(/\$\(Build\.BuildNumber\)/ig, buildNumber);
-            var iframe = document.getElementById('allure-report-iframe');
-            iframe.src = reportUrl;
-        }
-    </script>
+    function showReport(baseUrl, buildNumber, definitionName) {
+        var reportUrl = baseUrl
+            .replace(/\$\(Build\.BuildNumber\)/ig, buildNumber)
+            .replace(/\$\(Build\.DefinitionName\)/ig, definitionName);
+
+        var iframe = document.getElementById('allure-report-iframe');
+        iframe.src = reportUrl;
+    }
+    </script>  
 
     <style>
         body {
